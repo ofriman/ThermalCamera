@@ -2,7 +2,7 @@ package com.example.utility;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.widget.Toast;
@@ -69,7 +69,7 @@ public class Data {
 	public static final String [] RAW_INDEX =   {raw_00,raw_01 , raw_02 , raw_03 , raw_04 , raw_05 , raw_06 , raw_07 , raw_08, raw_09 , raw_10 , raw_11 , raw_12 , raw_13 , raw_14 , raw_15 , raw_16 , raw_17 , raw_18 , raw_19 , raw_20};
 	public static final String [] IMAGE_INDEX = {img_00,img_01 , img_02 , img_03 , img_04 , img_05 , img_06 , img_07 , img_08, img_09 , img_10 , img_11 , img_12 , img_13 , img_14 , img_15 , img_16 , img_17 , img_18 , img_19 , img_20};
 
-	public static String getRawString(Activity activity  ,String file)
+	public static String getRawString(Context activity  ,String file)
 	{
 		// load text
 		try {
@@ -93,7 +93,7 @@ public class Data {
 			return null;
 		}
 	}
-	public static int[] getRawArr(Activity activity , String path){
+	public static int[] getRawArr(Context activity , String path){
 		return convertLinetoInt(getRawString(activity,path));
 	}
 	private static int[] convertLinetoInt(String line)
@@ -118,7 +118,7 @@ public class Data {
 		}
 		return arr ;
 	}
-
+	//chart ?? 
 	public static int[] convertToHistogram(int [] pic,int temp_user_abs_min,int temp_user_abs_max,int temp_min,int temp_max,int value_min,int value_max)
 	{
 		int minMax [] = {temp_user_abs_min,temp_min,temp_max,temp_user_abs_max} ;
@@ -157,13 +157,14 @@ public class Data {
 		}
 		return hist ;
 	}
+	//PrevireImgActivity
 	public static int[] convertToImage(int [] pic,int temp_user_abs_min,int temp_user_abs_max,int temp_min,int temp_max,int value_min,int value_max)
 	{
-		int min [] = {temp_user_abs_min*100,temp_min*100,temp_max*100,temp_user_abs_max*100,camera_temperature_absolute_maximum*100} ;
+		int min [] = {temp_user_abs_min,temp_min,temp_max,temp_user_abs_max,camera_temperature_absolute_maximum*100} ;
 		int max [] = {camera_temperature_absolute_minimum*100,min[0],min[1],min[2],min[3]} ;
 		
 		for (int i = 0; i < pic.length; i++) {
-			if ( pic[i] < temp_user_abs_min *100 )
+			if ( pic[i] < temp_user_abs_min )
 			{
 				if(pic[i] < min[0]){
 					min[0]=pic[i];
@@ -172,7 +173,7 @@ public class Data {
 					max[0]=pic[i];
 				}
 			}
-			else if ( pic[i] < temp_min *100 )
+			else if ( pic[i] < temp_min  )
 			{
 				if(pic[i] < min[1]){
 					min[1]=pic[i];
@@ -181,7 +182,7 @@ public class Data {
 					max[1]=pic[i];
 				}
 			}
-			else if ( pic[i] < temp_max *100 )
+			else if ( pic[i] < temp_max  )
 			{
 				if(pic[i] < min[2]){
 					min[2]=pic[i];
@@ -190,7 +191,7 @@ public class Data {
 					max[2]=pic[i];
 				}
 			}
-			else if ( pic[i] < temp_user_abs_max *100 )
+			else if ( pic[i] < temp_user_abs_max  )
 			{
 				if(pic[i] < min[3]){
 					min[3]=pic[i];
@@ -247,7 +248,7 @@ public class Data {
 		return hist ;
 	}
 
-	public static Bitmap convertToDiffView(Activity activity , int img_type)
+	public static Bitmap convertToDiffView(Context activity , int img_type)
 	{
 
 		int numbers_frames = Data.IMAGE_SIZE[img_type];

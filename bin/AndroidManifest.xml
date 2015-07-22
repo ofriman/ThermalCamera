@@ -26,26 +26,35 @@
         </activity>
         <activity
             android:name=".RecordActivity"
-            android:label="@string/title_activity_record"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.finalproject.MainActivity" />
+            android:label="@string/title_activity_record" >
         </activity>
         <activity
-            android:name=".RecordArrActivity"
-            android:label="@string/title_activity_record_arr" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.finalproject.RecordActivity" />
+            android:name=".ObjectDetectionActivity"
+            android:label="@string/title_activity_object_detection" >
         </activity>
         <activity
-            android:name=".RecordMatActivity"
-            android:label="@string/title_activity_record_mat"
-            android:parentActivityName=".RecordActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.finalproject.RecordActivity" />
+            android:name=".ShowBitmapActivity"
+            android:label="@string/title_activity_show_bitmap" >
+        </activity>
+        <activity
+            android:name=".FrameInfoActivity"
+            android:label="@string/title_activity_frame_info" >
+        </activity>
+        <activity
+            android:name=".LineChartActivity"
+            android:label="@string/title_activity_line_chart" >
+        </activity>
+        <activity
+            android:name=".MyHistogramActivity"
+            android:label="@string/title_activity_my_histogram" >
+        </activity>
+        <activity
+            android:name=".PreviewImgActivity"
+            android:label="@string/title_activity_preview_img" >
+        </activity>
+              <activity
+            android:name=".RecordBenchmarkActivity"
+            android:label="@string/title_activity_record_benchmark" >
         </activity>
     </application>
 

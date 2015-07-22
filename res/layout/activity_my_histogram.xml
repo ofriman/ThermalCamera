@@ -1,0 +1,206 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.finalproject.MyHistogramActivity" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/spin_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <Spinner
+            android:id="@+id/spin_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <!--   ONE      -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_rangebar1_min_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar1_min"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="MIN:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar1_min_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+
+            <Button
+                android:id="@+id/btn_rangebar1_max_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar1_max"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="Max:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar1_max_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bar_rangebar1"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+        
+              <!--   TWO      -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_rangebar2_min_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar2_min"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="MIN:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar2_min_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+
+            <Button
+                android:id="@+id/btn_rangebar2_max_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar2_max"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="Max:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar2_max_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bar_rangebar2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+              <!--   THREEE      -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_rangebar3_min_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar3_min"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="MIN:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar3_min_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+
+            <Button
+                android:id="@+id/btn_rangebar3_max_down"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="(--" />
+
+            <TextView
+                android:id="@+id/tv_rangebar3_max"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="Max:"
+                android:typeface="monospace" />
+
+            <Button
+                android:id="@+id/btn_rangebar3_max_up"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="--)" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bar_rangebar3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+        
+
+        <TextView
+            android:id="@+id/tv_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:typeface="monospace" />
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Calculate" />
+    </LinearLayout>
+
+</ScrollView>
