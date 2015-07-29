@@ -52,9 +52,13 @@
             android:name=".PreviewImgActivity"
             android:label="@string/title_activity_preview_img" >
         </activity>
-              <activity
+        <activity
             android:name=".RecordBenchmarkActivity"
             android:label="@string/title_activity_record_benchmark" >
+        </activity>
+        <activity
+            android:name=".TransferActivity"
+            android:label="@string/title_activity_transfer" >
         </activity>
     </application>
 

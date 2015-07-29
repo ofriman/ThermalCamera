@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,51 +34,49 @@ import com.example.finalproject.R;
 public class ZipManager {
 
 	public static final int byte_buffer = 0 ;
-	public static final int my_compress = 1 ;
-	public static final String[] int_format_data = {"Byte Buffer","My Comoress"};
+	public static final int my_convert = 1 ;
+	public static final String[] int_convert_data = {"Byte Buffer","My Convert"};
+
+	public static final int subtract_first_frame = 0 ;
+	public static final String[] int_manipulation_data = {"Subtract First Frame"};
 
 	public static final int png = 0 ;
 	public static final int jpeg = 1 ;
 	public static final int webp = 2 ;
 	public static final String[] bitmap_format_data = {"Png","Jpeg","Webp"};
 
-	public static final int my_compress_frames = 0 ;
-	public static final int my_compress_frames_intensive = 1 ;
-	public static final String[] int_compress_data = {"My Comoress","My Comoress Intensive"};
-
-	public static final int intensive_const = 3 ;
-
-
 	private static final String media_path = MainActivity.media_path ;
 
-	public static int[][] MyMatCompress(int [][] frames,boolean intensive ){
+	public static int[][] MyMatCompress(int [][] frames){
 		//TODO DEEP COPY FOR TESTING WE CAN REMOVE FOR OPTIMIZTION
 		int [][] new_frames = new int [frames.length][] ;
-		for (int i=0; i < frames.length; i++) {
+		
+		new_frames[0] = new int [frames[0].length];
+		for (int i = 0; i < frames[0].length; i++) {
+			new_frames[0][i] = frames[0][i] ;
+		}
+		
+		for (int i=1; i < frames.length; i++) {
 			new_frames[i] = new int [frames[i].length];
-			new_frames[i][0] = frames[i][0] ;
-			for (int j=1; j<frames[i].length; j++){
-				new_frames[i][j] = frames[i][j] - new_frames[i][0];
-				if(intensive && Math.abs(frames[i][j]) < intensive_const){
-					new_frames[i][j] = 0 ;
-				}
+			for (int j=0; j<frames[i].length; j++){
+				new_frames[i][j] = frames[i][j] - new_frames[0][j];
 			}
 		}
 		return new_frames;
 	}
 	public static int[][] MyMatDeCompress(int [][] frames){
-		for (int i=0; i < frames.length; i++) {
-			for (int j=1; j<frames[i].length; j++){
-				frames[i][j] += frames[i][0];
+		for (int i=1; i < frames.length; i++) {
+			for (int j=0; j<frames[i].length; j++){
+				frames[i][j] += frames[0][j];
 			}
 		}
 		return frames;
 	}
 
-	public static byte[][] IntToByte(int [][] frames , int zip_id){
+	public static byte[][] IntToByte(int [][] frames , int convert_id){
 		byte [][] new_frames = new byte[frames.length][]  ;
-		switch(zip_id){
-		case my_compress :
+		switch(convert_id){
+		case my_convert :
 			for (int i = 0; i < new_frames.length; i++) {
 				new_frames[i] = RawCompression.Compress(frames[i]);
 			}
@@ -97,7 +96,7 @@ public class ZipManager {
 	public static int[][] ByteToInt(byte[][] frames , int zip_id){
 		int [][] new_frames = new int[frames.length][]  ;
 		switch(zip_id){
-		case my_compress :
+		case my_convert :
 			for (int i = 0; i < new_frames.length; i++) {
 				new_frames[i] = RawCompression.Decompress(frames[i]);
 			}
@@ -170,56 +169,61 @@ public class ZipManager {
 	}
 
 	public static class SaveMatArr extends AsyncTask<Void, String, String> {
-
+		// activity info
 		private WeakReference<Activity> weakActivity = null;
 		private Activity activity = null ;
 		private ProgressDialog dialog = null ;
+		// record info 
 		private int image_id ;
 		private boolean []  frame_id  ;
-		private int pic_id  ;
-		private int format_id  ;
-		private int compress_id  ;
+		private int saved_pic_id  ;
+		private int convert_id  ;
+		private int manipulation_id  ;
 		private boolean test ;
 
-		public SaveMatArr (Activity context, int image_id , boolean [] frame_id, int pic_id,int format_id,int compress_id,boolean test) {
+		public SaveMatArr (Activity context, int image_id , boolean [] frame_id, int saved_pic_id,int convert_id,int manipulation_id,boolean test) {
 			this.weakActivity = new WeakReference<Activity>(context);
-			this.image_id = image_id; 
-			this.frame_id = frame_id;
-			this.pic_id = pic_id; 
-			this.format_id = format_id;
-			this.compress_id=compress_id;
-			this.test = test ;
+			this.image_id = image_id;  // image id
+			this.frame_id = frame_id;  // frame id
+			this.saved_pic_id = saved_pic_id;   // saved id
+			this.convert_id = convert_id;   // convert byteToInt intToByte
+			this.manipulation_id=manipulation_id; // compress int array
+			this.test = test ;			// test boolean
 		}
 
 		@Override
 		protected String doInBackground(Void... params) {
-
 			if (activity != null) {
-					
-				publishProgress("Loading frames ...");
-				
+				publishProgress("Loading frames");
 				int size = 0 ;
-				String test_txt =  "Format "+ZipManager.int_format_data[format_id]+
-									"\nCompress "+ZipManager.int_compress_data[compress_id]+
-									"\nFrames "+Arrays.toString(frame_id)+"\n";
-				
+				//TEST VARIABLES
+				String test_txt =	"Int Arrays Manipulation : "+ZipManager.int_manipulation_data[manipulation_id]+"\n"+
+						"Convert : "+ZipManager.int_convert_data[convert_id]+"\n"+
+						"Frames : "+Arrays.toString(frame_id)+"\n";
+				int count = 0 ;
+				//
 				for (int i = 0; i < frame_id.length; i++) {
 					if(frame_id[i])size ++ ;
 				}
+
 				if(size <= 0){
 					return "error , you didnt pick any frames \n"; 
 				}
-			
+
 				int [][] frames = new int [size][]; 
 				for (int i = 0,u=0; i < frame_id.length; i++) {
 					if(frame_id[i]){
 						String txtfile = image_id+"/"+Data.RAW_INDEX[i];
 						frames[u++] = Data.getRawArr(activity , txtfile ) ;
+						count += frames[u-1].length * 4 ;
 					}
 				}
-				test_txt += "Frames brfore - Length: "+(frames.length*frames[0].length*4)+" Byets\n";	
-				
-				publishProgress("checking Loaded frames ...");
+				test_txt += "Frames size before : "+count+" Byets\n";	
+
+				publishProgress("checking frames");
+
+				// if pixel > 9000 (90 C) -> pixel = 9000 (90 C)
+				//if pixel < 500 (5 C) -> pixel = 500 (5 C)
 				for (int i = 0; i < frames.length; i++) {
 					if(frames[i] == null){
 						return "error , frame "+i+" is null "; 
@@ -227,60 +231,71 @@ public class ZipManager {
 					for(int j =0 ; j < frames[i].length ; j++){
 						if(frames[i][j] < RawCompression._MIN_PIXEL_VAL)
 						{
+							Log.e("Bad Pixel","frame["+i+"]["+j+"] is equal "+frames[i][j]+" fixed to "+RawCompression._MIN_PIXEL_VAL);
 							frames[i][j] = RawCompression._MIN_PIXEL_VAL;
 						}
 						else if (frames[i][j] > RawCompression._MAX_PIXEL_VAL){
+							Log.e("Bad Pixel","frame["+i+"]["+j+"] is equal "+frames[i][j]+" fixed to "+RawCompression._MAX_PIXEL_VAL);
 							frames[i][j] = RawCompression._MAX_PIXEL_VAL;
 						}
 					}
 				}
 				// END CHECK
-				
-				publishProgress("Creating file ...");
+
+				publishProgress("Creating file");
 				File folder = new File(media_path);
 				if (!folder.exists()){
 					folder.mkdir();
 				}
-				String zip_file_path = media_path + "/ZIP"+pic_id+".zip" ;
-				publishProgress("Compressing frames ...");
-		
-				int [][] compressed_frames_int ;
-				if ( format_id == my_compress ){
-					compressed_frames_int = frames ;
+				String zip_file_path = media_path + "/ZIP"+saved_pic_id+".zip" ;
+				
+				publishProgress("manipulate frames ...");
+				int [][] manipulate_frames_int ;
+				switch(manipulation_id){
+				case subtract_first_frame:
+				default:
+					manipulate_frames_int = MyMatCompress(frames);
+					break;
 				}
-				else{
-					 compressed_frames_int = MyMatCompress(frames,compress_id==my_compress_frames_intensive);
+			
+				for (int i = 0; i < manipulate_frames_int.length; i++) {
+					if(manipulate_frames_int[i] == null){
+						return "error , manipulate frame "+i+" is null";
+					}
 				}
+				
 
-				byte [][] compressed_frames_byte = IntToByte(compressed_frames_int, format_id);
-							
-				for (int i = 0; i < compressed_frames_byte.length; i++) {
-					if(compressed_frames_byte[i] == null){
+				publishProgress("convert frames to bytes");
+				byte [][] converted_frames_byte = IntToByte(manipulate_frames_int, convert_id);
+
+				for (int i = 0; i < converted_frames_byte.length; i++) {
+					if(converted_frames_byte[i] == null){
 						return "error , IntToByte frame "+i+" is null";
 					}
 				}
 
 				publishProgress("Ziping frames ...");
 
-				if ( !MyZip(compressed_frames_byte,zip_file_path)){
+				if ( !MyZip(converted_frames_byte,zip_file_path)){
 					return  "error , zipping file";
 				}
-				
-				test_txt+="After Zip ="+new File(zip_file_path).length()+" Bytes\n";
-				
+				long after_size = new File(zip_file_path).length() ;
+				test_txt+="After Zip ="+after_size+" Bytes\n"+
+						  "Rate = "+((double)after_size/count)+"\n";
+
 				publishProgress("checking compressed_frames  ...");
 
-				byte [][] uncompressed_frames_byte ;
+				byte [][] unzip_frames_byte ;
 
-				if ((uncompressed_frames_byte =  MyUnZip(compressed_frames_byte.length,zip_file_path)) == null ){
+				if ((unzip_frames_byte =  MyUnZip(converted_frames_byte.length,zip_file_path)) == null ){
 					return  "error , unzipping file";	
 				}
-				for (int i = 0; i < compressed_frames_byte.length; i++) {
-					if(uncompressed_frames_byte == null)
+				for (int i = 0; i < unzip_frames_byte.length; i++) {
+					if(unzip_frames_byte[i] == null)
 					{
-						return "error , unzip frame is null" ; 
+						return "error , unzip frame "+i+" is null" ; 
 					}
-					if(!Arrays.equals(compressed_frames_byte[i], uncompressed_frames_byte[i]))
+					if(!Arrays.equals(unzip_frames_byte[i], converted_frames_byte[i]))
 					{
 						if (new File(zip_file_path).delete()){
 							return "error , unzip byte compressed frame "+i+" not equals , file was deleted" ; 
@@ -291,14 +306,14 @@ public class ZipManager {
 					}
 				}
 
-				int [][] uncompressed_frames_int = ByteToInt(uncompressed_frames_byte, format_id) ; 
+				int [][] unconverted_frames_int = ByteToInt(unzip_frames_byte, convert_id) ; 
 
-				for (int i = 0; i < compressed_frames_int.length; i++) {
-					if(uncompressed_frames_int[i] == null)
+				for (int i = 0; i < unconverted_frames_int.length; i++) {
+					if(unconverted_frames_int[i] == null)
 					{
-						return "error ,unzip ByteToInt compressed frame "+i+" is null" ; 
+						return "error ,unzip ByteToInt convertef frame "+i+" is null" ; 
 					}
-					if(!Arrays.equals(compressed_frames_int[i], uncompressed_frames_int[i]))
+					if(!Arrays.equals(unconverted_frames_int[i], manipulate_frames_int[i]))
 					{
 						if (new File(zip_file_path).delete()){
 							return "error , unzip ByteToInt compressed frame "+i+" not equals , file was deleted" ; 
@@ -309,16 +324,14 @@ public class ZipManager {
 					}
 				}
 
-				if(compress_id==my_compress_frames && format_id != my_compress ){
-
-					int [][] uncompressed_frames = MyMatDeCompress(uncompressed_frames_int) ;
+					int [][] unmanipulated_frames = MyMatDeCompress(unconverted_frames_int) ;
 
 					for (int i = 0; i < frames.length; i++) {
-						if(uncompressed_frames == null)
+						if(unmanipulated_frames == null)
 						{
 							return "error ,unzip uncompressed frame "+i+" is null" ; 
 						}
-						if(!Arrays.equals(uncompressed_frames[i], frames[i]))
+						if(!Arrays.equals(unmanipulated_frames[i], frames[i]))
 						{
 							if (new File(zip_file_path).delete()){
 								return "error ,unzip uncompressed frame "+i+" not equals , file was deleted" ; 
@@ -328,8 +341,7 @@ public class ZipManager {
 							}
 						}
 					}
-				}
-				
+
 				if(test)
 				{
 					new File(zip_file_path).delete();
@@ -353,8 +365,8 @@ public class ZipManager {
 					((TextView) activity.findViewById(R.id.tv_info)).append(result+"\n");
 				}
 				else{
-				Toast.makeText(activity,result, 
-						Toast.LENGTH_LONG).show();
+					Toast.makeText(activity,result, 
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		}
@@ -424,9 +436,6 @@ public class ZipManager {
 				return "error , unable to load bitmap from assets" ;
 			}
 
-			if(bitmaps == null){
-				return "error , bitmaps is null"  ; 
-			}
 			for (int i = 0; i < bitmaps.length; i++) {
 				if(bitmaps[i] == null){
 					return "error , bitmaps "+i+" is null"  ; 

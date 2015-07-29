@@ -1855,10 +1855,11 @@ containing a value of this type.
         public static final int activity_preview_img=0x7f03001b;
         public static final int activity_record=0x7f03001c;
         public static final int activity_show_bitmap=0x7f03001d;
-        public static final int fragment_line_chart=0x7f03001e;
-        public static final int list_item=0x7f03001f;
-        public static final int pick_list_item=0x7f030020;
-        public static final int support_simple_spinner_dropdown_item=0x7f030021;
+        public static final int activity_transfer=0x7f03001e;
+        public static final int fragment_line_chart=0x7f03001f;
+        public static final int list_item=0x7f030020;
+        public static final int pick_list_item=0x7f030021;
+        public static final int support_simple_spinner_dropdown_item=0x7f030022;
     }
     public static final class menu {
         public static final int line_chart=0x7f0d0000;
@@ -1867,6 +1868,7 @@ containing a value of this type.
         public static final int object_detection=0x7f0d0003;
         public static final int preview_img=0x7f0d0004;
         public static final int record=0x7f0d0005;
+        public static final int transfer=0x7f0d0006;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1945,6 +1947,7 @@ containing a value of this type.
         public static final int title_activity_record_benchmark=0x7f0a0022;
         public static final int title_activity_record_mat=0x7f0a001a;
         public static final int title_activity_show_bitmap=0x7f0a001c;
+        public static final int title_activity_transfer=0x7f0a0024;
     }
     public static final class style {
         public static final int Animation_AppCompat_DropDownUp=0x7f0b00cf;

@@ -21,18 +21,19 @@ public class MainActivity extends ActionBarActivity {
 			.getExternalStorageDirectory().getPath() + "/FinalProject/Media";
 
 	public static final String PREF_FILE_NAME = "prefs";
+	public static final String mode_id = "mode";
 
 	private static final int main_menu = 0;
 	private static final int compression_menu = 1;
 	private static final int events_menu = 2;
 	private static final int image_improvement_menu = 3;
-
-	public static final String mode_id = "mode";
+	private static final int broadcast_menu = 4;
 
 	private static final int compression = 0 ;
 	private static final int events = 1 ;
 	private static final int image_improvement = 2 ;
-	private static final String [] main_menu_val  = {"Compression","Events","Image Improvement"};
+	private static final int broadcast = 3 ;
+	private static final String [] main_menu_val  = {"Compression","Events","Image Improvement","Broadcast"};
 
 
 	public static final int bitmap_arr = 0;
@@ -44,6 +45,9 @@ public class MainActivity extends ActionBarActivity {
 
 	public static final int histogram = 0;
 	private static final String [] image_improvement_menu_val  = {"Histogram"};
+	
+	public static final int wifi_direct_file_transfer = 0;
+	private static final String [] broadcast_menu_val  = {"WiFi-Direct-File-Transfer"};
 
 	private ArrayAdapter<String> mMenuAdapter ;
 
@@ -54,6 +58,7 @@ public class MainActivity extends ActionBarActivity {
 
 		Intent intent =  getIntent();
 		if (intent != null ) {
+
 			int	mode = intent.getIntExtra(MainActivity.mode_id ,0 );
 			ListView listView = (ListView) findViewById(R.id.listview_main_menu);
 			String[] data ;
@@ -111,6 +116,22 @@ public class MainActivity extends ActionBarActivity {
 					}
 				});
 				break ;
+			case broadcast_menu:
+				data = broadcast_menu_val ;
+				listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+						Intent intent ;
+						switch(position)
+						{
+						case wifi_direct_file_transfer:
+							intent = new Intent(MainActivity.this, TransferActivity.class);
+							startActivity(intent);
+							break ;
+						}
+					}
+				});
+				break;
 			case main_menu :
 			default :
 				data = main_menu_val ;
@@ -132,6 +153,10 @@ public class MainActivity extends ActionBarActivity {
 							intent = new Intent(MainActivity.this, MainActivity.class).putExtra(mode_id, image_improvement_menu);
 							startActivity(intent);
 							break ;
+						case broadcast:
+							intent = new Intent(MainActivity.this, MainActivity.class).putExtra(mode_id, broadcast_menu);
+							startActivity(intent);
+							break;
 						}
 					}
 				});

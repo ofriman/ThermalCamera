@@ -8,7 +8,7 @@
     <string name="action_show_bitmap">Show Bitmap</string>
     <string name="action_frame_info">Show Frame Info</string>
     <string name="action_show_chart">Show Chart</string>
-     <string name="action_record_benchmark">Record Benchmark</string>
+    <string name="action_record_benchmark">Record Benchmark</string>
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_record_arr">RecordArrActivity</string>
     <string name="title_activity_record_mat">RecordMatActivity</string>
@@ -19,7 +19,8 @@
     <string name="title_activity_image_improvement_activity_menu">ImageImprovementActivityMenu</string>
     <string name="title_activity_my_histogram">MyHistogramActivity</string>
     <string name="title_activity_preview_img">PreviewImgActivity</string>
-     <string name="title_activity_record_benchmark">RecordBenchmarkActivity</string>
-     <string name="cb_negetive">negetive color</string>
+    <string name="title_activity_record_benchmark">RecordBenchmarkActivity</string>
+    <string name="cb_negetive">negetive color</string>
+    <string name="title_activity_transfer">TransferActivity</string>
 
 </resources>

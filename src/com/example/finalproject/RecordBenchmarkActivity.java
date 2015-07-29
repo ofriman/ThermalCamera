@@ -1,7 +1,5 @@
 package com.example.finalproject;
 
-import java.util.Arrays;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -34,8 +32,8 @@ public class RecordBenchmarkActivity extends ActionBarActivity {
 		super.onStart();
 		if(img_id != -1 && frame_id != null){
 			
-			for (int i = 0; i < ZipManager.int_format_data.length; i++) {
-				for (int j = 0; j < ZipManager.int_compress_data.length; j++) {
+			for (int i = 0; i < ZipManager.int_convert_data.length; i++) {
+				for (int j = 0; j < ZipManager.int_manipulation_data.length; j++) {
 							new ZipManager.SaveMatArr(this,img_id,frame_id,0,i,j,true).execute();
 					}		
 				} 

@@ -202,12 +202,12 @@ public class RecordActivity extends ActionBarActivity {
 		tv_info.setText(int_mat_info);
 
 		compress_adapter.clear();
-		compress_adapter.addAll(ZipManager.int_compress_data);
+		compress_adapter.addAll(ZipManager.int_manipulation_data);
 		spin_compress.setSelection(0);	
 		spin_compress.setVisibility(View.VISIBLE);
 
 		format_adapter.clear();
-		format_adapter.addAll(ZipManager.int_format_data);
+		format_adapter.addAll(ZipManager.int_convert_data);
 		spin_format.setSelection(0);	
 		spin_format.setVisibility(View.VISIBLE);
 

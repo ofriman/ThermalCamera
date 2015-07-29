@@ -2,6 +2,8 @@ package com.example.utility;
 
 import java.util.Arrays;
 
+import android.util.Log;
+
 /**
  * IntToByte ByteToInt Converter
  * @author oren
@@ -30,6 +32,7 @@ public class RawCompression {
 	private final static short _TWELVE_BITS = 4096 ;
 	private final static short _THIRTEEN_BITS = 8196 ;
 	private final static short _FOURTEEN_BITS = 16384 ; // > 8500
+	
 	//15 different types
 	private final static short _TYPE_SIZE = 15 ;  
 	private final static short _MAX_BITS = _FOURTEEN_BITS ;
@@ -61,17 +64,26 @@ public class RawCompression {
 			return null;
 		if ( type < 0 || _TYPE_SIZE  <= type)
 			return null ;
-		if	(min < 0 || _MAX_BITS <= min)
+		if	(min < (_MAX_BITS* -1) || _MAX_BITS <= min)
 			return null ;
 		if(size < 0 || _MAX_ARRAY_SIZE <= size)
 			return null ;
 
-		arr[0] = (byte)( (type &0xF )|((min&0xF)<<4));
-		arr[1] = (byte)( ((min &0xFF0)>>4));
-		arr[2] = (byte)( ((min &0x3000)>>12)|((size&0x3F)<<2)	); 
-		arr[3] = (byte) ((size&0x3FC0)>>>6);
-		arr[4] = (byte) ((size&0x3FC000)>>>14);
+		Log.e("HeaderInjection","["+type+","+min+","+size+"]");
+		
+		byte negative = 0 ;
+		
+		if(min < 0){
+			negative = 1 ;
+			min *= -1 ;
+		}
 
+		arr[0] = (byte)( (type &0xF )|((negative&0x1)<<4)  | ((min&0x7)<<5));
+		arr[1] = (byte)( ((min &0x7F8)>>3));
+		arr[2] = (byte)( ((min &0x3800)>>11)|((size&0x1F)<<3)	); 
+		arr[3] = (byte) ((size&0x1FE0)>>>5);
+		arr[4] = (byte) ((size&0x1FE000)>>>13);
+		
 		return arr ;
 	}
 	private static int[] HeaderInterpreter(byte[] arr) {
@@ -80,10 +92,19 @@ public class RawCompression {
 			return null;
 
 		int type = arr[0]&0xF ;
-		int min =  (((arr[0]&0xF0)>>4)|((arr[1]&0xFF)<<4)| ((arr[2]&0x3)<<12) );
-		int size = (((arr[2]&0xFC)>>2)|((arr[3]&0xFF)<<6)|((arr[4]&0xFF)<<14) ); 
+		int negative = (arr[0]&0x10)>>4 ;
+		int min =  (((arr[0]&0xE0)>>5)|((arr[1]&0xFF)<<3)| ((arr[2]&0x7)<<11) );
+		int size = (((arr[2]&0xF8)>>3)|((arr[3]&0xFF)<<5)|((arr[4]&0xFF)<<13) ); 
+		
+		if(negative == 1){
+			min *= -1 ;
+		}
+		
 		int ans [] = {type,min,size};
+	
+		Log.e("HeaderInterpreter",Arrays.toString(ans));
 		return ans ;
+
 	}
 
 	public static int[] Decompress(byte [] arr)
@@ -151,33 +172,11 @@ public class RawCompression {
 		int temp_arr [] = new int[size];
 
 
-		if(arr[0] > _MAX_PIXEL_VAL)
-		{
-			temp_arr[0] = _MAX_PIXEL_VAL;
-		}
-		else if(arr[0] < _MIN_PIXEL_VAL )
-		{
-			temp_arr[0] = _MIN_PIXEL_VAL;
-		}
-		else{
-			temp_arr[0] = arr[0];
-		}
-		int min = temp_arr[0] , max = temp_arr[0];
+		int min = arr[0] , max = arr[0];
 
-		for(int i = 1 ; i<size ;i++)
+		for(int i = 0 ; i<size ;i++)
 		{
-			if(arr[i] > _MAX_PIXEL_VAL)
-			{
-				temp_arr[i] = _MAX_PIXEL_VAL;
-			}
-			else if(arr[i] < _MIN_PIXEL_VAL )
-			{
-				temp_arr[i] = _MIN_PIXEL_VAL;
-			}
-			else
-			{
-				temp_arr[i]=arr[i];
-			}
+			temp_arr[i]=arr[i];
 
 			if (temp_arr[i] > max)
 			{ 
@@ -194,10 +193,10 @@ public class RawCompression {
 		{
 			temp_arr[i]-=min;
 		}
-
+		
 		//COMPRESS TYPE - MAX BIT PER NUMBER
 		short max_numbers =(short)( max - min + 1);
-
+		
 		if(max_numbers<=_ZERO_BIT)	
 			return ZEROCompress(size,min);
 		else if (max_numbers<=_ONE_BIT)
@@ -676,8 +675,9 @@ public class RawCompression {
 		byte [] ans = new byte[ans_size];
 		ans = HeaderInjection(ans, _TYPE, min, size);
 		int i = _HEADER_SIZE ;
-
+		
 		for (int j=0,u=0; i < ans_size & j <size;u++) {
+
 			if(u%8==0)
 			{
 				ans[i] =(byte)(arr[j++]&0x7F);	
@@ -1271,61 +1271,5 @@ public class RawCompression {
 	private static boolean FOURTEENTest() {
 		//TODO
 		return true;
-	}
-
-
-	public static void main(String [] args)
-	{
-		if(ZEROTest())
-			if(ONETest())
-				if(TWOTest())
-					if(THREETest())
-						if(FOURTest())
-							if(FIVETest())
-								if(SIXTest())
-									if(SEVENTest())
-										if(EIGHTTest())
-											if(NINETest())
-												if(TENTest())
-													if(ELEVENTest())
-														if(TWELEFTest())
-															if(THIRTEENTest())
-																if(FOURTEENTest())
-																	System.out
-																	.println("PASS ALL TESTS");
-																else
-																	System.out.println("14 fail");
-															else
-																System.out.println("13 fail");
-														else
-															System.out.println("12 fail");
-													else
-														System.out.println("11 fail");
-												else
-													System.out.println("10 fail");
-											else
-												System.out.println("9 fail");
-										else
-											System.out.println("8 fail");
-									else
-										System.out.println("7 fail");
-								else
-									System.out.println("6 fail");
-							else
-								System.out.println("5 fail");
-						else
-							System.out.println("4 fail");
-					else
-						System.out.println("3 fail");
-				else
-					System.out.println("2 fail");
-			else
-				System.out.println("1 fail");
-		else
-			System.out.println("0 fail");
-
-
-
-		System.out.println("END");
 	}
 }
